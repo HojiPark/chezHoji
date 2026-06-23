@@ -8,7 +8,6 @@ function escapeHtml(s) {
 const LIKE_NS = "boeun-blog";
 const ABACUS = "https://abacus.jasoncameron.dev";
 const FEED_LIMIT = 10;
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/REPLACE_ME"; // ← paste your Formspree endpoint
 
 // Wire one like button (scoped to its own card's elements).
 async function attachLike(btn, countEl, date) {
@@ -42,31 +41,6 @@ async function attachLike(btn, countEl, date) {
   });
 }
 
-// Wire the email contact form (one per page).
-function attachEmail(btn, form, status) {
-  if (!btn || !form) return;
-  btn.addEventListener("click", () => { form.hidden = !form.hidden; });
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    status.textContent = "Sending…";
-    try {
-      const res = await fetch(FORMSPREE_ENDPOINT, {
-        method: "POST",
-        headers: { "Accept": "application/json" },
-        body: new FormData(form),
-      });
-      if (res.ok) {
-        form.reset();
-        status.textContent = "Sent! Thank you.";
-      } else {
-        status.textContent = "Could not send. Try again later.";
-      }
-    } catch (_) {
-      status.textContent = "Could not send. Try again later.";
-    }
-  });
-}
-
 async function loadIndex() {
   const res = await fetch("posts.json", { cache: "no-store" });
   if (!res.ok) throw new Error("posts.json missing");
@@ -80,21 +54,16 @@ async function loadIndex() {
 
 function feedCardHtml(post, bodyHtml) {
   return `
-    <div class="window page-window post-card" data-date="${escapeHtml(post.date)}">
-      <div class="title-bar">
-        <button aria-label="Close" class="close"></button>
-        <h1 class="title">${escapeHtml(post.title)}</h1>
-        <button aria-label="Resize" class="resize"></button>
-      </div>
-      <div class="separator"></div>
-      <div class="window-pane">
+    <article class="page-window post-card" data-date="${escapeHtml(post.date)}">
+      <header class="post-head">
+        <h2 class="post-title">${escapeHtml(post.title)}</h2>
         <div class="post-date">${escapeHtml(post.date)}</div>
-        <article class="post-body">${bodyHtml}</article>
-        <div class="post-actions">
-          <button class="like-button">♥ Like <span class="like-count">…</span></button>
-        </div>
+      </header>
+      <div class="post-body">${bodyHtml}</div>
+      <div class="post-actions">
+        <button class="like-button">♥ Like <span class="like-count">…</span></button>
       </div>
-    </div>`;
+    </article>`;
 }
 
 // Fetch each post's markdown, render full cards, append into `target`,
@@ -157,9 +126,4 @@ async function renderFeed() {
 
 // ---- router ------------------------------------------------------------
 
-attachEmail(
-  document.getElementById("email-button"),
-  document.getElementById("email-form"),
-  document.getElementById("email-status")
-);
 renderFeed();
