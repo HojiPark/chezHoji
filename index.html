@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My Blog</title>
+  <link rel="stylesheet" href="https://unpkg.com/@sakun/system.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="window" style="max-width: 640px; margin: 32px auto;">
+    <div class="title-bar">
+      <button aria-label="Close" class="close"></button>
+      <h1 class="title">My Blog</h1>
+      <button aria-label="Resize" class="resize"></button>
+    </div>
+    <div class="separator"></div>
+    <div class="window-pane">
+      <header class="blog-header">
+        <div class="avatar" aria-label="pixel art placeholder">☕🌿</div>
+        <div class="identity">
+          <div class="name">This is Boeun Park</div>
+          <div class="alias">(also Claire)</div>
+        </div>
+      </header>
+      <hr>
+      <ul id="post-list"><li>Loading…</li></ul>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
