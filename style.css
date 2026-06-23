@@ -1,5 +1,12 @@
 :root { font-family: "Geneva", "Chicago", system-ui, sans-serif; }
 
+body { background: #c0c0c0; }            /* classic desktop gray */
+a { color: #000; }
+
+/* every top-level window shares one column width + vertical rhythm */
+.page-window { max-width: 640px; margin: 24px auto; }
+
+/* ---- header / identity ---- */
 .blog-header {
   display: flex;
   align-items: center;
@@ -19,22 +26,24 @@
 }
 .blog-header .name { font-weight: bold; font-size: 16px; }
 .blog-header .alias { font-size: 12px; color: #444; }
+.blog-header .email-top { margin-left: auto; cursor: pointer; }
 
-#post-list { list-style: none; padding: 0; margin: 8px 0 0; }
-#post-list li { padding: 6px 0; border-bottom: 1px dotted #999; }
-#post-list a { text-decoration: none; color: #000; display: flex; justify-content: space-between; }
-#post-list a:hover { background: #000; color: #fff; }
-#post-list .date { font-variant-numeric: tabular-nums; margin-right: 12px; }
-
-.post-date { font-size: 12px; color: #444; margin-bottom: 8px; }
-#post-body h1 { font-size: 18px; }
-#post-body { line-height: 1.5; }
-.post-actions { margin-top: 20px; display: flex; gap: 12px; }
 #email-form { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; max-width: 360px; }
 
-#like-button.liked { font-weight: bold; }
+/* ---- post body (feed cards use .post-body, permalink uses #post-body) ---- */
+.post-date { font-size: 12px; color: #444; margin-bottom: 8px; }
+.post-body, #post-body { line-height: 1.5; }
+.post-body h1, #post-body h1 { font-size: 18px; }
+.post-body a, #post-body a { text-decoration: underline; }
 
-body { background: #c0c0c0; }            /* classic desktop gray */
-a { color: #000; }
-#post-body a { text-decoration: underline; }
+.post-actions { margin-top: 20px; display: flex; gap: 12px; align-items: center; }
 .post-actions button { cursor: pointer; }
+.post-actions .permalink { font-size: 12px; color: #444; }
+.like-button.liked, #like-button.liked { font-weight: bold; }
+
+/* ---- "Older posts" date list ---- */
+#older-list { list-style: none; padding: 0; margin: 0; }
+#older-list li { padding: 6px 0; border-bottom: 1px dotted #999; }
+#older-list a { text-decoration: none; color: #000; display: flex; justify-content: space-between; }
+#older-list a:hover { background: #000; color: #fff; }
+#older-list .date { font-variant-numeric: tabular-nums; margin-right: 12px; }

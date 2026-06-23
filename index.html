@@ -8,7 +8,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="window" style="max-width: 640px; margin: 32px auto;">
+  <!-- Header window: identity + email at the top -->
+  <div class="window page-window">
     <div class="title-bar">
       <button aria-label="Close" class="close"></button>
       <h1 class="title">My Blog</h1>
@@ -22,11 +23,35 @@
           <div class="name">This is Boeun Park</div>
           <div class="alias">(also Claire)</div>
         </div>
+        <button id="email-button" class="email-top">✉ Send email</button>
       </header>
-      <hr>
-      <ul id="post-list"><li>Loading…</li></ul>
+      <form id="email-form" hidden>
+        <label>Your name<br><input type="text" name="name" required></label>
+        <label>Message<br><textarea name="message" rows="4" required></textarea></label>
+        <button type="submit">Send</button>
+        <span id="email-status" role="status"></span>
+      </form>
     </div>
   </div>
+
+  <!-- Feed: latest posts with full bodies, injected by app.js -->
+  <div id="feed" class="feed">
+    <div class="window page-window"><div class="window-pane">Loading…</div></div>
+  </div>
+
+  <!-- Older posts: date list, shown only when there are more than the feed limit -->
+  <div id="older" class="window page-window" hidden>
+    <div class="title-bar">
+      <button aria-label="Close" class="close"></button>
+      <h1 class="title">Older posts</h1>
+      <button aria-label="Resize" class="resize"></button>
+    </div>
+    <div class="separator"></div>
+    <div class="window-pane">
+      <ul id="older-list"></ul>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="app.js" defer></script>
 </body>
