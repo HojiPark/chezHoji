@@ -96,7 +96,6 @@ function feedCardHtml(post, bodyHtml) {
         <article class="post-body">${bodyHtml}</article>
         <div class="post-actions">
           <button class="like-button">♥ Like <span class="like-count">…</span></button>
-          <a class="permalink" href="post.html?date=${encodeURIComponent(post.date)}">permalink</a>
         </div>
       </div>
     </div>`;
