@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Post</title>
+  <link rel="stylesheet" href="https://unpkg.com/@sakun/system.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="window" style="max-width: 640px; margin: 32px auto;">
+    <div class="title-bar">
+      <button aria-label="Close" class="close"></button>
+      <h1 class="title" id="post-title">Post</h1>
+      <button aria-label="Resize" class="resize"></button>
+    </div>
+    <div class="separator"></div>
+    <div class="window-pane">
+      <p><a href="index.html">‹ Back</a></p>
+      <div id="post-date" class="post-date"></div>
+      <article id="post-body">Loading…</article>
+
+      <div class="post-actions">
+        <button id="like-button">♥ Like <span id="like-count">…</span></button>
+        <button id="email-button">✉ Send email</button>
+      </div>
+      <form id="email-form" hidden>
+        <label>Your name<br><input type="text" name="name" required></label>
+        <label>Message<br><textarea name="message" rows="4" required></textarea></label>
+        <button type="submit">Send</button>
+        <span id="email-status" role="status"></span>
+      </form>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
