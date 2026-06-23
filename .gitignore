@@ -1,2 +1,6 @@
 .DS_Store
 .superpowers/
+
+# Local-only admin: never deploy these (they hold/handle your GitHub token)
+write.html
+admin.js
