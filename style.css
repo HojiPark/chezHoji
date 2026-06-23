@@ -30,19 +30,15 @@ a { color: #000; }
 
 #email-form { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; max-width: 360px; }
 
-/* ---- post body (feed cards use .post-body, permalink uses #post-body) ---- */
+/* ---- post body (feed cards) ---- */
 .post-date { font-size: 12px; color: #444; margin-bottom: 8px; }
-.post-body, #post-body { line-height: 1.5; }
-.post-body h1, #post-body h1 { font-size: 18px; }
-.post-body a, #post-body a { text-decoration: underline; }
+.post-body { line-height: 1.5; }
+.post-body h1 { font-size: 18px; }
+.post-body a { text-decoration: underline; }
 
 .post-actions { margin-top: 20px; display: flex; gap: 12px; align-items: center; }
 .post-actions button { cursor: pointer; }
-.like-button.liked, #like-button.liked { font-weight: bold; }
+.like-button.liked { font-weight: bold; }
 
-/* ---- "Older posts" date list ---- */
-#older-list { list-style: none; padding: 0; margin: 0; }
-#older-list li { padding: 6px 0; border-bottom: 1px dotted #999; }
-#older-list a { text-decoration: none; color: #000; display: flex; justify-content: space-between; }
-#older-list a:hover { background: #000; color: #fff; }
-#older-list .date { font-variant-numeric: tabular-nums; margin-right: 12px; }
+/* ---- "Show older posts" toggle ---- */
+#show-older { cursor: pointer; }

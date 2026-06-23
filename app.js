@@ -5,16 +5,12 @@ function escapeHtml(s) {
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-function getParam(name) {
-  return new URLSearchParams(location.search).get(name);
-}
-
 const LIKE_NS = "boeun-blog";
 const ABACUS = "https://abacus.jasoncameron.dev";
 const FEED_LIMIT = 10;
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/REPLACE_ME"; // ← paste your Formspree endpoint
 
-// Wire one like button (scoped to its own elements, works in feed or permalink).
+// Wire one like button (scoped to its own card's elements).
 async function attachLike(btn, countEl, date) {
   if (!btn || !countEl) return;
   const key = encodeURIComponent(date);
@@ -80,7 +76,7 @@ async function loadIndex() {
   return posts;
 }
 
-// ---- home feed ---------------------------------------------------------
+// ---- feed --------------------------------------------------------------
 
 function feedCardHtml(post, bodyHtml) {
   return `
@@ -101,6 +97,28 @@ function feedCardHtml(post, bodyHtml) {
     </div>`;
 }
 
+// Fetch each post's markdown, render full cards, append into `target`,
+// and wire the like button on every newly added card.
+async function renderCards(posts, target) {
+  const cards = await Promise.all(posts.map(async (p) => {
+    try {
+      const md = await (await fetch(`posts/${p.date}.md`, { cache: "no-store" })).text();
+      return feedCardHtml(p, marked.parse(md));
+    } catch (_) {
+      return feedCardHtml(p, "<em>Could not load this post.</em>");
+    }
+  }));
+  target.insertAdjacentHTML("beforeend", cards.join(""));
+  target.querySelectorAll(".post-card:not([data-wired])").forEach((card) => {
+    card.dataset.wired = "1";
+    attachLike(
+      card.querySelector(".like-button"),
+      card.querySelector(".like-count"),
+      card.dataset.date
+    );
+  });
+}
+
 async function renderFeed() {
   const feed = document.getElementById("feed");
   let posts;
@@ -118,89 +136,30 @@ async function renderFeed() {
   const recent = posts.slice(0, FEED_LIMIT);
   const older = posts.slice(FEED_LIMIT);
 
-  // Fetch each recent post body (in parallel), render full feed.
-  const cards = await Promise.all(recent.map(async (p) => {
-    try {
-      const md = await (await fetch(`posts/${p.date}.md`, { cache: "no-store" })).text();
-      return feedCardHtml(p, marked.parse(md));
-    } catch (_) {
-      return feedCardHtml(p, "<em>Could not load this post.</em>");
-    }
-  }));
-  feed.innerHTML = cards.join("");
+  feed.innerHTML = "";
+  await renderCards(recent, feed);
 
-  // Wire one like button per card.
-  feed.querySelectorAll(".post-card").forEach((card) => {
-    attachLike(
-      card.querySelector(".like-button"),
-      card.querySelector(".like-count"),
-      card.dataset.date
-    );
-  });
-
-  // Older posts: date list, only if there are extras.
+  // Older posts: a button that expands the rest inline (no separate page).
   if (older.length) {
-    const olderBox = document.getElementById("older");
-    const list = document.getElementById("older-list");
-    list.innerHTML = older.map(p => `
-      <li><a href="post.html?date=${encodeURIComponent(p.date)}">
-        <span><span class="date">${escapeHtml(p.date)}</span>${escapeHtml(p.title)}</span>
-        <span aria-hidden="true">▸</span>
-      </a></li>`).join("");
-    olderBox.hidden = false;
+    const box = document.getElementById("older");
+    const btn = document.getElementById("show-older");
+    const olderFeed = document.getElementById("older-feed");
+    btn.textContent = `▾ Show older posts (${older.length})`;
+    box.hidden = false;
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      btn.textContent = "Loading…";
+      await renderCards(older, olderFeed);
+      box.hidden = true;
+    });
   }
-}
-
-// ---- single post permalink --------------------------------------------
-
-async function renderPost() {
-  const date = getParam("date");
-  const body = document.getElementById("post-body");
-  const titleEl = document.getElementById("post-title");
-  const dateEl = document.getElementById("post-date");
-  if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    body.textContent = "Post not found.";
-    return null;
-  }
-  try {
-    const idx = await loadIndex();
-    const meta = idx.find(p => p.date === date);
-    if (meta) { titleEl.textContent = meta.title; document.title = meta.title; }
-  } catch (_) { /* non-fatal */ }
-  dateEl.textContent = date;
-  try {
-    const res = await fetch(`posts/${date}.md`, { cache: "no-store" });
-    if (!res.ok) throw new Error("not found");
-    body.innerHTML = marked.parse(await res.text());
-  } catch (_) {
-    body.textContent = "Post not found.";
-    return null;
-  }
-  return date;
 }
 
 // ---- router ------------------------------------------------------------
 
-if (document.getElementById("feed")) {
-  // Home: email at top, then the feed.
-  attachEmail(
-    document.getElementById("email-button"),
-    document.getElementById("email-form"),
-    document.getElementById("email-status")
-  );
-  renderFeed();
-} else if (document.getElementById("post-body")) {
-  // Permalink page.
-  attachEmail(
-    document.getElementById("email-button"),
-    document.getElementById("email-form"),
-    document.getElementById("email-status")
-  );
-  renderPost().then(date => {
-    if (date) attachLike(
-      document.getElementById("like-button"),
-      document.getElementById("like-count"),
-      date
-    );
-  });
-}
+attachEmail(
+  document.getElementById("email-button"),
+  document.getElementById("email-form"),
+  document.getElementById("email-status")
+);
+renderFeed();

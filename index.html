@@ -39,18 +39,11 @@
     <div class="window page-window"><div class="window-pane">Loading…</div></div>
   </div>
 
-  <!-- Older posts: date list, shown only when there are more than the feed limit -->
-  <div id="older" class="window page-window" hidden>
-    <div class="title-bar">
-      <button aria-label="Close" class="close"></button>
-      <h1 class="title">Older posts</h1>
-      <button aria-label="Resize" class="resize"></button>
-    </div>
-    <div class="separator"></div>
-    <div class="window-pane">
-      <ul id="older-list"></ul>
-    </div>
+  <!-- Older posts: a button that expands the rest into the feed (no separate page) -->
+  <div id="older" hidden style="max-width: 640px; margin: 0 auto 24px; text-align: center;">
+    <button id="show-older">▾ Show older posts</button>
   </div>
+  <div id="older-feed" class="feed"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="app.js" defer></script>
